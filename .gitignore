@@ -31,6 +31,3 @@ build/
 
 ### Tests ###
 **/src/test/**
-
-### Local Application Properties ###
-/src/main/resources/application.properties
