@@ -36,8 +36,8 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
 		// Handle logout on client side by changing basic authentication header username and password to "" and "" (empty or null)
 		http
 				.authorizeRequests()
-				.antMatchers("/", "/user/create").permitAll()
-				.antMatchers("/user/**").authenticated()
+				.antMatchers("/user/create").permitAll()
+				.antMatchers("/user/**").hasRole("USER")
 				.anyRequest().authenticated()
 
 				.and()
