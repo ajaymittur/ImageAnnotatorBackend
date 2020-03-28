@@ -26,7 +26,7 @@ public class AnnotatorController {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	@GetMapping("/getAccountDetails")
+	@GetMapping("/get-account-details")
 	public Annotators getLoggedInUser(Principal principal) throws UsernameNotFoundException {
 		String username = principal.getName();
 		Optional<Annotators> loggedInUser = annotatorRepo.findByUsername(username);
