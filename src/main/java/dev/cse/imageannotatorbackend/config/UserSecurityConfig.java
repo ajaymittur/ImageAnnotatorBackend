@@ -38,7 +38,7 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
 				.authorizeRequests()
 				.antMatchers("/user/create").permitAll()
 				.antMatchers("/user/**").hasRole("USER")
-				.anyRequest().authenticated()
+				.anyRequest().permitAll()
 
 				.and()
 				.httpBasic()
