@@ -2,6 +2,7 @@ package dev.cse.imageannotatorbackend.controller;
 
 import dev.cse.imageannotatorbackend.service.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -15,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/images")
+@RequestMapping("**/images")
 public class ImageController {
 
 	private S3Service s3Service;
@@ -34,13 +35,16 @@ public class ImageController {
 	}
 
 	@PostMapping("/upload")
-	public Map<String, String[]> uploadImages(@RequestPart(value = "images") MultipartFile[] files) throws IOException {
+	public Map<String, String[]> uploadImages(@RequestPart(value = "files") MultipartFile[] files, Authentication authentication) throws IOException {
 		File[] filesConverted = new File[files.length];
 		for (int i = 0; i < files.length; i++) {
 			filesConverted[i] = multipartToFileConverter(files[i]);
 		}
 		Map<String, String[]> response = new HashMap<>();
-		response.put("image-url", s3Service.uploadImage(filesConverted));
+		String role = authentication.getAuthorities().iterator().next().getAuthority();
+		role = role.replace("ROLE_", "");
+		response.put("image-urls", s3Service.uploadImage(filesConverted, role, authentication.getName()));
+		// TODO: Save image-urls to database
 		return response;
 	}
 }
