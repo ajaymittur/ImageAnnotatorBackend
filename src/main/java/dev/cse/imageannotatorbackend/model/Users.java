@@ -1,5 +1,6 @@
 package dev.cse.imageannotatorbackend.model;
 
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -20,18 +21,6 @@ public class Users {
 	@Column(name = "Created_On")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date created_on;
-
-	public Users() {
-	}
-
-	public Users(Users user) {
-		this.username = user.getUsername();
-		this.email = user.getEmail();
-		this.password = user.getPassword();
-		this.name = user.getName();
-		this.organization = user.getOrganization();
-		this.created_on = user.getCreated_on();
-	}
 
 	public String getUsername() {
 		return username;
