@@ -7,8 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ImageAnnotatorBackendApplication {
 
 	public static void main(String[] args) {
-
 		SpringApplication.run(ImageAnnotatorBackendApplication.class, args);
 	}
-
 }
