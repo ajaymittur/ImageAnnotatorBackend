@@ -30,7 +30,7 @@ public class UserController {
 	public Users getLoggedInUser(Principal principal) throws UsernameNotFoundException {
 		String username = principal.getName();
 		Optional<Users> loggedInUser = userRepo.findByUsername(username);
-		loggedInUser.ifPresent(users -> users.setPassword("***SECRET***"));
+		loggedInUser.ifPresent(users -> users.setPassword("***********"));
 		return loggedInUser.orElseThrow(() -> new UsernameNotFoundException("User with username: " + username + " not found in records"));
 	}
 

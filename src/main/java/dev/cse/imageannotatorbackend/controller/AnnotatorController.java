@@ -30,7 +30,7 @@ public class AnnotatorController {
 	public Annotators getLoggedInUser(Principal principal) throws UsernameNotFoundException {
 		String username = principal.getName();
 		Optional<Annotators> loggedInUser = annotatorRepo.findByUsername(username);
-		loggedInUser.ifPresent(annotators -> annotators.setPassword("***SECRET***"));
+		loggedInUser.ifPresent(annotators -> annotators.setPassword("***********"));
 		return loggedInUser.orElseThrow(() -> new UsernameNotFoundException("Annotator with username: " + username + " not found in records"));
 	}
 
