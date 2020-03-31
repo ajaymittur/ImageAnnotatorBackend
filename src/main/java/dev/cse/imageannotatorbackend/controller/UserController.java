@@ -1,7 +1,7 @@
 package dev.cse.imageannotatorbackend.controller;
 
 import dev.cse.imageannotatorbackend.model.Users;
-import dev.cse.imageannotatorbackend.repository.UsersRepository;
+import dev.cse.imageannotatorbackend.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,19 +17,19 @@ import java.util.Optional;
 @RequestMapping("/user")
 public class UserController {
 
-	private UsersRepository userRepo;
+	private UsersService usersService;
 	private PasswordEncoder passwordEncoder;
 
 	@Autowired
-	public UserController(UsersRepository userRepo, PasswordEncoder passwordEncoder) {
-		this.userRepo = userRepo;
+	public UserController(UsersService usersService, PasswordEncoder passwordEncoder) {
+		this.usersService = usersService;
 		this.passwordEncoder = passwordEncoder;
 	}
 
 	@GetMapping("/get-account-details")
 	public Users getLoggedInUser(Principal principal) throws UsernameNotFoundException {
 		String username = principal.getName();
-		Optional<Users> loggedInUser = userRepo.findByUsername(username);
+		Optional<Users> loggedInUser = usersService.getUser(username);
 		loggedInUser.ifPresent(users -> users.setPassword("***********"));
 		return loggedInUser.orElseThrow(() -> new UsernameNotFoundException("User with username: " + username + " not found in records"));
 	}
@@ -49,7 +49,7 @@ public class UserController {
 		String encryptedPassword = passwordEncoder.encode(plainPassword);
 		newUser.setPassword(encryptedPassword);
 		try {
-			userRepo.save(newUser);
+			usersService.addUser(newUser);
 			return new ResponseEntity<>("User Account Created Successfully", HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);

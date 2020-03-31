@@ -1,7 +1,7 @@
 package dev.cse.imageannotatorbackend.controller;
 
 import dev.cse.imageannotatorbackend.model.Annotators;
-import dev.cse.imageannotatorbackend.repository.AnnotatorsRepository;
+import dev.cse.imageannotatorbackend.service.AnnotatorsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,19 +17,19 @@ import java.util.Optional;
 @RequestMapping("/annotator")
 public class AnnotatorController {
 
-	private AnnotatorsRepository annotatorRepo;
+	private AnnotatorsService annotatorsService;
 	private PasswordEncoder passwordEncoder;
 
 	@Autowired
-	public AnnotatorController(AnnotatorsRepository annotatorRepo, PasswordEncoder passwordEncoder) {
-		this.annotatorRepo = annotatorRepo;
+	public AnnotatorController(AnnotatorsService annotatorsService, PasswordEncoder passwordEncoder) {
+		this.annotatorsService = annotatorsService;
 		this.passwordEncoder = passwordEncoder;
 	}
 
 	@GetMapping("/get-account-details")
 	public Annotators getLoggedInUser(Principal principal) throws UsernameNotFoundException {
 		String username = principal.getName();
-		Optional<Annotators> loggedInUser = annotatorRepo.findByUsername(username);
+		Optional<Annotators> loggedInUser = annotatorsService.getAnnotator(username);
 		loggedInUser.ifPresent(annotators -> annotators.setPassword("***********"));
 		return loggedInUser.orElseThrow(() -> new UsernameNotFoundException("Annotator with username: " + username + " not found in records"));
 	}
@@ -48,7 +48,7 @@ public class AnnotatorController {
 		String encryptedPassword = passwordEncoder.encode(plainPassword);
 		newAnnotator.setPassword(encryptedPassword);
 		try {
-			annotatorRepo.save(newAnnotator);
+			annotatorsService.addAnnotator(newAnnotator);
 			return new ResponseEntity<>("Annotator Account Created Successfully", HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
