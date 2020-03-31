@@ -1,6 +1,6 @@
 package dev.cse.imageannotatorbackend.config;
 
-import dev.cse.imageannotatorbackend.service.MySQLAnnotatorDetailsService;
+import dev.cse.imageannotatorbackend.service.AnnotatorDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,11 +17,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Order(1)
 public class AnnotatorSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	private MySQLAnnotatorDetailsService annotatorDetailsService;
+	private AnnotatorDetailsService annotatorDetailsService;
 	private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
 	@Autowired
-	public AnnotatorSecurityConfig(MySQLAnnotatorDetailsService annotatorDetailsService, CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
+	public AnnotatorSecurityConfig(AnnotatorDetailsService annotatorDetailsService, CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
 		this.annotatorDetailsService = annotatorDetailsService;
 		this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
 	}
