@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class MySQLAnnotatorDetailsService implements UserDetailsService {
+public class AnnotatorDetailsService implements UserDetailsService {
 
 	private AnnotatorsRepository annotatorsRepo;
 
 	@Autowired
-	public MySQLAnnotatorDetailsService(AnnotatorsRepository annotatorsRepo) {
+	public AnnotatorDetailsService(AnnotatorsRepository annotatorsRepo) {
 		this.annotatorsRepo = annotatorsRepo;
 	}
 
