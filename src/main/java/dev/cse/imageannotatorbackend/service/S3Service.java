@@ -24,7 +24,7 @@ public class S3Service {
 		this.s3Client = s3Client;
 	}
 
-	public String uploadImage(File file, String folderName) {
+	/*public String uploadImage(File file, String folderName) {
 		String uploadedUrl = "";
 		try {
 			s3Client.putObject(new PutObjectRequest(bucketName, folderName + "/" + file.getName(), file)
@@ -35,21 +35,37 @@ public class S3Service {
 		}
 		file.delete(); // remove file created in server to prevent memory overflow
 		return uploadedUrl;
-	}
+	}*/
 
 	public String[] uploadImage(File[] files, String role, String username) {
 		String[] uploadedUrls = new String[files.length];
+
 		try {
 			for (int i = 0; i < files.length; i++) {
 				File file = files[i];
-				s3Client.putObject(new PutObjectRequest(bucketName, role + '/' + username + '/' + file.getName(), file)
+				String fullFileName = file.getName();
+				String fileName = "";
+				String folderName = "";
+				String[] fileNameSplit = fullFileName.split("/");
+				if (fileNameSplit.length > 1) {
+					folderName = fileNameSplit[0];
+					fileName = fileNameSplit[1];
+				} else {
+					folderName = "single";
+					fileName = fileNameSplit[0];
+				}
+
+				s3Client.putObject(new PutObjectRequest(bucketName, role + '/' + username + '/' + folderName + '/' + fileName, file)
 						.withCannedAcl(CannedAccessControlList.PublicRead));
-				uploadedUrls[i] = awsS3Endpoint + '/' + bucketName + '/' + role + '/' + username + '/' + file.getName();
+
+				uploadedUrls[i] = awsS3Endpoint + '/' + bucketName + '/' + role + '/' + username + '/' + folderName + '/' + fileName;
+
 				file.delete(); // remove file created in server to prevent memory overflow
 			}
 		} catch (AmazonServiceException e) {
 			System.err.println(e.getErrorMessage());
 		}
+
 		return uploadedUrls;
 	}
 }
