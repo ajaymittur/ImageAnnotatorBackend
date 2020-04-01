@@ -7,6 +7,7 @@ import dev.cse.imageannotatorbackend.repository.AnnotatorsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,8 +40,12 @@ public class AnnotatedImagesService {
 		});
 	}
 
-	// TODO: Test and complete functionality
-	public List<AnnotatedImages> getImages(String username) {
-		return annotatedImagesRepository.findByAnnotatorUsername(username);
+	public List<String> getImages(String username) {
+		List<AnnotatedImages> images =  annotatedImagesRepository.findByAnnotatorUsername(username);
+		List<String> imageUrls = new ArrayList<String>();
+		for (AnnotatedImages img : images) {
+			imageUrls.add(img.getUrl());
+		}
+		return imageUrls;
 	}
 }
