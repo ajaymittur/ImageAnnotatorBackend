@@ -11,13 +11,17 @@ public class AnnotatedImages {
 	@Id
 	@Column(name = "Image_Name")
 	private String name;
+
 	@Id
 	@Column(name = "Folder_Name")
 	private String folderName;
+
 	@Column(name = "Image_URL")
 	private String url;
+
 	@Column(name = "Category")
 	String category;
+
 	@ManyToOne
 	@JoinColumn(name = "Annotated_By")
 	private Annotators annotator; // Enforces Username foreign key constraint
