@@ -1,15 +1,15 @@
 package dev.cse.imageannotatorbackend.controller;
 
+import dev.cse.imageannotatorbackend.model.resource.Image;
 import dev.cse.imageannotatorbackend.service.AnnotatedImagesService;
+import dev.cse.imageannotatorbackend.service.ImageUtilsService;
 import dev.cse.imageannotatorbackend.service.OriginalImagesService;
-import dev.cse.imageannotatorbackend.service.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -19,69 +19,54 @@ import java.util.Map;
 @RequestMapping("**/images")
 public class ImageController {
 
-	private S3Service s3Service;
+	private ImageUtilsService imageUtilsService;
 	private OriginalImagesService originalImagesService;
 	private AnnotatedImagesService annotatedImagesService;
 
 	@Autowired
-	public ImageController(S3Service s3Service, OriginalImagesService originalImagesService, AnnotatedImagesService annotatedImagesService) {
-		this.s3Service = s3Service;
+	public ImageController(ImageUtilsService imageUtilsService, OriginalImagesService originalImagesService, AnnotatedImagesService annotatedImagesService) {
+		this.imageUtilsService = imageUtilsService;
 		this.originalImagesService = originalImagesService;
 		this.annotatedImagesService = annotatedImagesService;
 	}
 
-	private File multipartToFileConverter(MultipartFile file) throws IOException {
-		File convertedFile = new File(file.getOriginalFilename());
-		FileOutputStream fos = new FileOutputStream(convertedFile);
-		fos.write(file.getBytes());
-		fos.close();
-		return convertedFile;
-	}
-
-	private String getRoleFromAuth(Authentication authentication) {
-		String role = authentication.getAuthorities().iterator().next().getAuthority(); // Get the role of the user
-		role = role.replace("ROLE_", "");
-		return role;
-	}
-
 	@PostMapping("/upload")
-	public Map<String, String[]> uploadImages(@RequestPart(value = "files") MultipartFile[] files, @RequestParam String[] categories, Authentication authentication) throws IOException {
+	public Map<String, String[]> uploadImages(@RequestPart(value = "files") MultipartFile[] files, @RequestParam String[] categories, @RequestParam(required = false) String[] tags, Authentication authentication) throws IOException {
+		/*
+			For USER: Categories is the possible labels of the images
+			For ANNOTATOR: Categories is the label of corresponding image in the files array
+		*/
+
 		// Convert files from Multipart to File
 		File[] filesConverted = new File[files.length];
 		for (int i = 0; i < files.length; i++) {
-			filesConverted[i] = multipartToFileConverter(files[i]);
+			filesConverted[i] = imageUtilsService.multipartToFileConverter(files[i]);
 		}
 
 		// Upload files and create JSON response
 		Map<String, String[]> response = new HashMap<>();
-		String role = getRoleFromAuth(authentication);
-		String username = authentication.getName();
-		String[] image_urls = s3Service.uploadImage(filesConverted, role, username); // Upload the file
+		String[] image_urls = imageUtilsService.uploadFilesAndGetUrls(filesConverted, authentication);
 		response.put("image-urls", image_urls);
 
-		// Save image urls in database
+		// Save images along with related data in database
+		String role = imageUtilsService.getRoleFromAuth(authentication);
 		if (role.equals("USER")) {
-			originalImagesService.addImages(username, image_urls);
+			originalImagesService.addImages(authentication.getName(), image_urls, categories, tags);
 		} else if (role.equals("ANNOTATOR")) {
-			for (String cat : categories) {
-				System.out.println(cat);
-			}
-			annotatedImagesService.addImages(username, image_urls, categories);
+			annotatedImagesService.addImages(authentication.getName(), image_urls, categories);
 		}
 
 		return response;
 	}
 
 	@GetMapping("/get-all-images")
-	// TODO: Return JSON Object with image-urls: [urls] and {categories}:{category} if required to allow annotator images to also be returned
-	public List<String> getImages(Authentication authentication) {
-		String role = getRoleFromAuth(authentication);
-		List<String> response = null;
+	public List<? extends Image> getImages(Authentication authentication) {
+		String role = imageUtilsService.getRoleFromAuth(authentication);
+		List<? extends Image> response = null;
 
 		if (role.equals("USER")) {
 			response = originalImagesService.getImages(authentication.getName());
 		} else if (role.equals("ANNOTATOR")) {
-			// TODO: Return category as well
 			response = annotatedImagesService.getImages(authentication.getName());
 		}
 
