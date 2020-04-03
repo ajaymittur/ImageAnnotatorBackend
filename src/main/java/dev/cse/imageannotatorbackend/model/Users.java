@@ -10,14 +10,19 @@ public class Users {
 	@Id
 	@Column(name = "Username")
 	private String username;
+
 	@Column(name = "Email")
 	private String email;
+
 	@Column(name = "Password")
 	private String password;
+
 	@Column(name = "Name")
 	private String name;
+
 	@Column(name = "Organization")
 	private String organization;
+
 	@Column(name = "Created_On")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date created_on;

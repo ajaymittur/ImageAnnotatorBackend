@@ -10,14 +10,19 @@ public class Annotators {
 	@Id
 	@Column(name = "Username")
 	private String username;
+
 	@Column(name = "Email")
 	private String email;
+
 	@Column(name = "Password")
 	private String password;
+
 	@Column(name = "Name")
 	private String name;
+
 	@Column(name = "Num_Images_Annotated")
 	private long num_images_annotated; // default value constraint of 0 has been enforced in mysql
+
 	@Column(name = "Created_On")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date created_on;
