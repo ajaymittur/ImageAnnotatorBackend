@@ -24,19 +24,6 @@ public class S3Service {
 		this.s3Client = s3Client;
 	}
 
-	/*public String uploadImage(File file, String folderName) {
-		String uploadedUrl = "";
-		try {
-			s3Client.putObject(new PutObjectRequest(bucketName, folderName + "/" + file.getName(), file)
-					.withCannedAcl(CannedAccessControlList.PublicRead));
-			uploadedUrl = awsS3Endpoint + '/' + bucketName + '/' + folderName + file.getName();
-		} catch (AmazonServiceException e) {
-			System.err.println(e.getErrorMessage());
-		}
-		file.delete(); // remove file created in server to prevent memory overflow
-		return uploadedUrl;
-	}*/
-
 	public String[] uploadImage(File[] files, String role, String username) {
 		String[] uploadedUrls = new String[files.length];
 

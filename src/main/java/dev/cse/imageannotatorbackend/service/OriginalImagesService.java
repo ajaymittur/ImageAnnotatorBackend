@@ -2,14 +2,13 @@ package dev.cse.imageannotatorbackend.service;
 
 import dev.cse.imageannotatorbackend.model.OriginalImages;
 import dev.cse.imageannotatorbackend.model.Users;
+import dev.cse.imageannotatorbackend.model.resource.UserImage;
 import dev.cse.imageannotatorbackend.repository.OriginalImagesRepository;
 import dev.cse.imageannotatorbackend.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class OriginalImagesService {
@@ -23,8 +22,10 @@ public class OriginalImagesService {
 		this.usersRepository = usersRepository;
 	}
 
-	public void addImages(String username, String[] imageUrls) {
+	public void addImages(String username, String[] imageUrls, String[] categories, String[] tags) {
 		Optional<Users> user = usersRepository.findByUsername(username);
+		Set<String> categoriesSet = new HashSet<>(Arrays.asList(categories));
+		Set<String> tagsSet = new HashSet<>(Arrays.asList(tags));
 		user.ifPresent((usr) -> {
 			for (String url : imageUrls) {
 				// Parse name (Image Name) and folderName from image url
@@ -33,19 +34,20 @@ public class OriginalImagesService {
 				String name = urlSplit[urlSplitLength - 1];
 				String folderName = urlSplit[urlSplitLength - 2];
 
-				OriginalImages ogImg = new OriginalImages(usr, name, folderName, url);
+				OriginalImages ogImg = new OriginalImages(usr, name, folderName, url, categoriesSet, tagsSet);
 				originalImagesRepository.save(ogImg);
 			}
 		});
 	}
 
-	// TODO: Test and complete functionality
-	public List<String> getImages(String username) {
+	public List<UserImage> getImages(String username) {
 		List<OriginalImages> images =  originalImagesRepository.findByUserUsername(username);
-		List<String> imageUrls = new ArrayList<String>();
+		List<UserImage> userImages = new ArrayList<>();
+
 		for (OriginalImages img : images) {
-			imageUrls.add(img.getUrl());
+			userImages.add(new UserImage(img));
 		}
-		return imageUrls;
+
+		return userImages;
 	}
 }

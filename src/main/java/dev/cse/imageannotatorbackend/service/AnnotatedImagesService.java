@@ -2,6 +2,7 @@ package dev.cse.imageannotatorbackend.service;
 
 import dev.cse.imageannotatorbackend.model.AnnotatedImages;
 import dev.cse.imageannotatorbackend.model.Annotators;
+import dev.cse.imageannotatorbackend.model.resource.AnnotatedImage;
 import dev.cse.imageannotatorbackend.repository.AnnotatedImagesRepository;
 import dev.cse.imageannotatorbackend.repository.AnnotatorsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,10 @@ public class AnnotatedImagesService {
 		this.annotatorsRepository = annotatorsRepository;
 	}
 
-	// TODO: Complete functionality
 	public void addImages(String username, String[] imageUrls, String[] categories) {
 		Optional<Annotators> annotator = annotatorsRepository.findByUsername(username);
 		annotator.ifPresent((annot) -> {
+			long imagesAnnotated = annot.getNum_images_annotated();
 			for (int i = 0; i < imageUrls.length; i++) {
 				// Parse name (Image Name) and folderName from image url
 				String[] urlSplit = imageUrls[i].split("/");
@@ -36,16 +37,21 @@ public class AnnotatedImagesService {
 
 				AnnotatedImages annotImg = new AnnotatedImages(annot, name, folderName, imageUrls[i], categories[i]);
 				annotatedImagesRepository.save(annotImg);
+				imagesAnnotated++;
 			}
+			annot.setNum_images_annotated(imagesAnnotated);
+			annotatorsRepository.save(annot);
 		});
 	}
 
-	public List<String> getImages(String username) {
+	public List<AnnotatedImage> getImages(String username) {
 		List<AnnotatedImages> images =  annotatedImagesRepository.findByAnnotatorUsername(username);
-		List<String> imageUrls = new ArrayList<String>();
+		List<AnnotatedImage> annotatedImages = new ArrayList<>();
+
 		for (AnnotatedImages img : images) {
-			imageUrls.add(img.getUrl());
+			annotatedImages.add(new AnnotatedImage(img));
 		}
-		return imageUrls;
+
+		return annotatedImages;
 	}
 }
