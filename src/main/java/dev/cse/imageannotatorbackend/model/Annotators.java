@@ -21,7 +21,7 @@ public class Annotators {
 	private String name;
 
 	@Column(name = "Num_Images_Annotated")
-	private long num_images_annotated; // default value constraint of 0 has been enforced in mysql
+	private long num_images_annotated;
 
 	@Column(name = "Created_On")
 	@Temporal(TemporalType.TIMESTAMP)
