@@ -35,6 +35,7 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		// Handle logout on client side by changing basic authentication header username and password to "" and "" (empty or null)
 		http
+				.cors().and()
 				.csrf().disable()
 				.antMatcher("/user/**").authorizeRequests()
 				.antMatchers("/", "/user/create").permitAll()
