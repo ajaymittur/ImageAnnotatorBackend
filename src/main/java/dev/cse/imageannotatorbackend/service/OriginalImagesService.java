@@ -50,4 +50,26 @@ public class OriginalImagesService {
 
 		return userImages;
 	}
+
+	public List<UserImage> getUnAnnotatedImages() {
+		List<OriginalImages> images =  originalImagesRepository.findAllUnAnnotatedImages();;
+		List<UserImage> userImages = new ArrayList<>();
+
+		for (OriginalImages img : images) {
+			userImages.add(new UserImage(img));
+		}
+
+		return userImages;
+	}
+
+	public List<UserImage> getUnAnnotatedImages(String username) {
+		List<OriginalImages> images =  originalImagesRepository.findUnAnnotatedImagesByUsername(username);;
+		List<UserImage> userImages = new ArrayList<>();
+
+		for (OriginalImages img : images) {
+			userImages.add(new UserImage(img));
+		}
+
+		return userImages;
+	}
 }
