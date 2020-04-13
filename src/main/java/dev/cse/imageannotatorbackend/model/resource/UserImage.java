@@ -4,7 +4,7 @@ import dev.cse.imageannotatorbackend.model.OriginalImages;
 
 import java.util.Set;
 
-public class UserImage extends Image{
+public class UserImage extends Image {
 
 	private String uploadedBy;
 	private Set<String> categories;
