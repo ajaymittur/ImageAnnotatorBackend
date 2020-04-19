@@ -20,7 +20,20 @@ public class ImageUtilsService {
 	}
 
 	public File multipartToFileConverter(MultipartFile file) throws IOException {
-		File convertedFile = new File(file.getOriginalFilename());
+		String fileName = file.getOriginalFilename();
+		String[] fileNameComponents = fileName.split("/");
+		String folderName = "";
+
+		if (fileNameComponents.length == 2) {
+			folderName = fileNameComponents[0];
+//			fileName = fileNameComponents[1];
+			File folder = new File(folderName);
+			if (!folder.exists()) {
+				folder.mkdir();
+			}
+		}
+
+		File convertedFile = new File(fileName);
 		FileOutputStream fos = new FileOutputStream(convertedFile);
 		fos.write(file.getBytes());
 		fos.close();
