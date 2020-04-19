@@ -26,7 +26,6 @@ public class ImageUtilsService {
 
 		if (fileNameComponents.length == 2) {
 			folderName = fileNameComponents[0];
-//			fileName = fileNameComponents[1];
 			File folder = new File(folderName);
 			if (!folder.exists()) {
 				folder.mkdir();
@@ -35,7 +34,6 @@ public class ImageUtilsService {
 		}
 
 		File convertedFile = new File(fileName);
-//		System.out.println(convertedFile.getPath()); // test/images.jpg
 		FileOutputStream fos = new FileOutputStream(convertedFile);
 		fos.write(file.getBytes());
 		fos.close();

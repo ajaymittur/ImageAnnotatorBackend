@@ -30,7 +30,6 @@ public class S3Service {
 		try {
 			for (int i = 0; i < files.length; i++) {
 				File file = files[i];
-//				String fullFileName = file.getName();
 				String fullFileName = file.getPath();
 				String fileName = "";
 				String folderName = "";
