@@ -31,9 +31,12 @@ public class ImageUtilsService {
 			if (!folder.exists()) {
 				folder.mkdir();
 			}
+			folderName += "/"; // to remove the need to add the frontslash while creating a file
 		}
 
+		System.out.println(fileName);
 		File convertedFile = new File(fileName);
+		System.out.println(convertedFile.getName() + "      " + convertedFile.getParent() + "          " + convertedFile.getPath());
 		FileOutputStream fos = new FileOutputStream(convertedFile);
 		fos.write(file.getBytes());
 		fos.close();
