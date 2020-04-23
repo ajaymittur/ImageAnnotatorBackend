@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface AnnotatedImagesRepository extends JpaRepository<AnnotatedImages, AnnotatedImagesId> {
 	List<AnnotatedImages> findByAnnotatorUsername(String username);
+
+	List<AnnotatedImages> findByNameInAndFolderNameIn(List<String> names, List<String> folderNames);
 }

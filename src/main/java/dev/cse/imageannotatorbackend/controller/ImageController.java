@@ -73,6 +73,20 @@ public class ImageController {
 		return response;
 	}
 
+    @GetMapping("/get-annotated-images")
+    public List<? extends Image> getAnnotatedImages(Authentication authentication) {
+        String role = imageUtilsService.getRoleFromAuth(authentication);
+        List<? extends Image> response = null;
+
+        if (role.equals("USER")) {
+            response = annotatedImagesService.getImagesForUser(authentication.getName());
+        } else if (role.equals("ANNOTATOR")) {
+            response = annotatedImagesService.getImages(authentication.getName());
+        }
+
+        return response;
+    }
+
 	@GetMapping("/get-unannotated-images")
 	public List<? extends Image> getUnAnnotatedImages(Authentication authentication) {
 		String role = imageUtilsService.getRoleFromAuth(authentication);
