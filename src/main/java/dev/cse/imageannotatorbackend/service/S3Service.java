@@ -3,6 +3,7 @@ package dev.cse.imageannotatorbackend.service;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,8 +43,11 @@ public class S3Service {
 					fileName = fileNameSplit[0];
 				}
 
-				s3Client.putObject(new PutObjectRequest(bucketName, role + '/' + username + '/' + folderName + '/' + fileName, file)
-						.withCannedAcl(CannedAccessControlList.PublicRead));
+				PutObjectRequest request = new PutObjectRequest(bucketName, role + '/' + username + '/' + folderName + '/' + fileName, file);
+				ObjectMetadata metadata = new ObjectMetadata();
+				metadata.setContentDisposition("attachment");
+				request.setMetadata(metadata);
+				s3Client.putObject(request.withCannedAcl(CannedAccessControlList.PublicRead));
 
 				uploadedUrls[i] = awsS3Endpoint + '/' + bucketName + '/' + role + '/' + username + '/' + folderName + '/' + fileName;
 
