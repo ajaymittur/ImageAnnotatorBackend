@@ -9,6 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface AnnotatorsRepository extends JpaRepository<Annotators, String> {
-	@Query(value = "SELECT * FROM Annotators WHERE Username = ?", nativeQuery = true)
+	@Query(value = "SELECT * FROM Annotators WHERE Username = ?1", nativeQuery = true)
 	Optional<Annotators> findByUsername(String username);
 }

@@ -10,9 +10,9 @@ import java.util.List;
 
 @Repository
 public interface AnnotatedImagesRepository extends JpaRepository<AnnotatedImages, AnnotatedImagesId> {
-	@Query(value = "SELECT * FROM Annotated_Images WHERE Annotated_By = ?", nativeQuery = true)
+	@Query(value = "SELECT * FROM Annotated_Images WHERE Annotated_By = ?1", nativeQuery = true)
 	List<AnnotatedImages> findByAnnotatorUsername(String username);
 
-	@Query(value = "SELECT * FROM Annotated_Images WHERE Image_Name IN ? AND Folder_Name IN ?", nativeQuery = true)
+	@Query(value = "SELECT * FROM Annotated_Images WHERE Image_Name IN ?1 AND Folder_Name IN ?2", nativeQuery = true)
 	List<AnnotatedImages> findByNameInAndFolderNameIn(List<String> names, List<String> folderNames);
 }

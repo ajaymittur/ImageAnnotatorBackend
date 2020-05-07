@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface OriginalImagesRepository extends JpaRepository<OriginalImages, OriginalImagesId> {
-	@Query(value = "SELECT * FROM Original_Images WHERE  Username = ?", nativeQuery = true)
+	@Query(value = "SELECT * FROM Original_Images WHERE  Username = ?1", nativeQuery = true)
 	List<OriginalImages> findByUserUsername(String username);
 
 	@Query(value="SELECT * FROM Original_Images og WHERE (og.Image_Name, og.Folder_Name) NOT IN (SELECT Image_Name, Folder_Name from Annotated_Images ai)", nativeQuery=true)
