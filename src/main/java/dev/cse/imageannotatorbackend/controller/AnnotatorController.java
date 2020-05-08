@@ -1,7 +1,9 @@
 package dev.cse.imageannotatorbackend.controller;
 
 import dev.cse.imageannotatorbackend.model.Annotators;
+import dev.cse.imageannotatorbackend.model.MessagesId;
 import dev.cse.imageannotatorbackend.service.AnnotatorsService;
+import dev.cse.imageannotatorbackend.service.MessagesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,8 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/annotator")
@@ -19,11 +20,13 @@ public class AnnotatorController {
 
 	private AnnotatorsService annotatorsService;
 	private PasswordEncoder passwordEncoder;
+	private MessagesService messagesService;
 
 	@Autowired
-	public AnnotatorController(AnnotatorsService annotatorsService, PasswordEncoder passwordEncoder) {
+	public AnnotatorController(AnnotatorsService annotatorsService, PasswordEncoder passwordEncoder, MessagesService messagesService) {
 		this.annotatorsService = annotatorsService;
 		this.passwordEncoder = passwordEncoder;
+		this.messagesService = messagesService;
 	}
 
 	@GetMapping("/get-account-details")
@@ -50,6 +53,28 @@ public class AnnotatorController {
 		try {
 			annotatorsService.addAnnotator(newAnnotator);
 			return new ResponseEntity<>("Annotator Account Created Successfully", HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@GetMapping("/get-messages")
+	public List<String> getMessages(Principal principal) {
+		try {
+			return messagesService.getMessages(principal.getName());
+		} catch (Exception e) {
+			return new ArrayList<>(){{
+				add(e.toString());
+			}};
+		}
+	}
+
+	@PostMapping("/read-message")
+	public ResponseEntity<String> readMessage(Principal principal, @RequestBody Map<String, String> message) {
+		try {
+			MessagesId messageId = new MessagesId(principal.getName(), message.get("message"));
+			messagesService.deleteMessage(messageId);
+			return new ResponseEntity<>("Message Read", HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
 		}
