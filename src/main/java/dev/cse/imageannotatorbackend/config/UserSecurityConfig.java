@@ -48,23 +48,4 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
 				.and()
 				.sessionManagement().disable();
 	}
-
-	// Configuration class to match all remaining requests
-//	@Configuration
-//	@Order(3)
-//	public static class RootSecurityConfig extends WebSecurityConfigurerAdapter {
-//		@Override
-//		protected void configure(HttpSecurity http) throws Exception {
-//			http
-//					.csrf().disable()
-//					.authorizeRequests().anyRequest().authenticated()
-//
-//					.and()
-//					.httpBasic()
-//
-//					.and()
-//					.sessionManagement().disable()
-//			;
-//		}
-//	}
 }
