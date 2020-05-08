@@ -39,7 +39,6 @@ public class UserController {
 		// Authentication being handled by spring security
 		// Pass credentials as basic auth in header
 		return new ResponseEntity<>("User: " + principal.getName() + " Logged In", HttpStatus.OK);
-		// TODO: Add redirect ("redirect:{url}") instead of doing it in frontend?
 	}
 
 	@PostMapping("/create")
