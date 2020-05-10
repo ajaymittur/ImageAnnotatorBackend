@@ -28,4 +28,8 @@ public class AnnotatorsService {
 	public List<Annotators> findAll() {
 		return annotatorsRepository.findAll();
 	}
+
+	public void deleteAnnotatorAccount(String username) {
+		annotatorsRepository.deleteById(username);
+	}
 }

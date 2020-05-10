@@ -13,8 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -68,6 +68,17 @@ public class AdminController {
         try {
             messagesService.addMessage(message);
             return new ResponseEntity<>("Message Sent to Annotator Successfully", HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/delete-annotator")
+    public ResponseEntity<String> deleteAnnotator(@RequestBody Map<String, String> body) {
+        try {
+            String username = body.get("username");
+            adminService.deleteAnnotatorAccount(body.get("username"));
+            return new ResponseEntity<>("Annotator: " + body.get("username") + " Deleted Successfully", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
         }

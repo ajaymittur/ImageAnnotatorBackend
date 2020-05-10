@@ -31,4 +31,8 @@ public class AdminService {
     public List<Annotators> getAllAnnotators() {
         return annotatorsService.findAll();
     }
+
+    public void deleteAnnotatorAccount(String username) {
+        annotatorsService.deleteAnnotatorAccount(username);
+    }
 }
