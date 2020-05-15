@@ -7,6 +7,7 @@ import dev.cse.imageannotatorbackend.model.Messages;
 import dev.cse.imageannotatorbackend.repository.AnnotatorMessagesRepository;
 import dev.cse.imageannotatorbackend.repository.MessagesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,11 +41,16 @@ public class MessagesService {
     }
 
     public List<Messages> getMessages(String username) {
-        AtomicLong annotatorId = new AtomicLong();
+        long annotatorId = 0;
         Optional<Annotators> annot = annotatorsService.getAnnotator(username);
 
-        annot.ifPresent(ann -> annotatorId.set(ann.getId()));
+        if (annot.isPresent())
+            annotatorId = annot.get().getId();
+        else
+            throw new UsernameNotFoundException("Invalid annotator username, couldn't find annotator");
 
-        return messagesRepository.findById(annotatorId.get());
+        List<Long> msgIds = annotatorMessagesRepository.findByAnnotatorId(annotatorId);
+
+        return messagesRepository.findByIds(msgIds);
     }
 }

@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface MessagesRepository extends JpaRepository<Messages, Long> {
-    @Query(value = "SELECT * FROM Messages m WHERE m.MessageId = ?1", nativeQuery = true)
-    List<Messages> findById(long id);
+    @Query(value = "SELECT * FROM Messages m WHERE m.MessageId IN ?1", nativeQuery = true)
+    List<Messages> findByIds(List<Long> ids);
 }
