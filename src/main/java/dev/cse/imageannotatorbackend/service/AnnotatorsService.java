@@ -30,6 +30,6 @@ public class AnnotatorsService {
 	}
 
 	public void deleteAnnotatorAccount(String username) {
-		annotatorsRepository.deleteById(username);
+		annotatorsRepository.deleteByUsername(username);
 	}
 }

@@ -12,9 +12,8 @@ public class UserImage extends Image {
 
 	public UserImage(OriginalImages img) {
 		super(img.getName(), img.getFolderName(), img.getUrl());
-		this.uploadedBy = img.getUser().getUsername();
+		this.uploadedBy = img.getUploaded_by();
 		this.categories = img.getCategories();
-		this.tags = img.getTags();
 	}
 
 	public String getUploadedBy() {

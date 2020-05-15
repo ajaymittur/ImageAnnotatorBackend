@@ -3,26 +3,32 @@ package dev.cse.imageannotatorbackend.model;
 import javax.persistence.*;
 
 @Entity
-@IdClass(MessagesId.class)
 public class Messages {
     @Id
-    @Column(name = "Username")
-    private String username;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name = "MessageId")
+    private long id;
 
-    @Id
     @Column(name = "Message")
     private String message;
 
-    @ManyToOne
-    @JoinColumn(name = "Username", insertable = false, updatable = false)
-    private Annotators annotators;
+    public Messages() {}
 
-    public String getUsername() {
-        return username;
+    public Messages(String message) {
+        this.message = message;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public Messages(long id, String message) {
+        this.id = id;
+        this.message = message;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getMessage() {
@@ -31,13 +37,5 @@ public class Messages {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public Annotators getAnnotators() {
-        return annotators;
-    }
-
-    public void setAnnotators(Annotators annotators) {
-        this.annotators = annotators;
     }
 }

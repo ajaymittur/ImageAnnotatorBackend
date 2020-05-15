@@ -39,7 +39,8 @@ public class AnnotatedImagesService {
 				String name = urlSplit[urlSplitLength - 1];
 				String folderName = urlSplit[urlSplitLength - 2];
 
-				AnnotatedImages annotImg = new AnnotatedImages(annot, name, folderName, imageUrls[i], categories[i]);
+				OriginalImages ogImg = originalImagesRepository.findByNameAndFolderName(name, folderName);
+				AnnotatedImages annotImg = new AnnotatedImages(ogImg.getId(), annot, name, folderName, imageUrls[i], categories[i]);
 				annotatedImagesRepository.save(annotImg);
 				imagesAnnotated++;
 			}
@@ -60,7 +61,7 @@ public class AnnotatedImagesService {
 	}
 
 	public List<AnnotatedImage> getImagesForUser(String username) {
-		List<OriginalImages> ogImages = originalImagesRepository.findByUserUsername(username);
+		List<OriginalImages> ogImages = originalImagesRepository.findByUploaded_by(username);
 		List<String> names = new ArrayList<>(), folderNames = new ArrayList<>();
 
 		for (OriginalImages img: ogImages) {

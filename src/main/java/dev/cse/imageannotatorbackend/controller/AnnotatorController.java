@@ -1,7 +1,8 @@
 package dev.cse.imageannotatorbackend.controller;
 
 import dev.cse.imageannotatorbackend.model.Annotators;
-import dev.cse.imageannotatorbackend.model.MessagesId;
+import dev.cse.imageannotatorbackend.model.AnnotatorMessagesId;
+import dev.cse.imageannotatorbackend.model.Messages;
 import dev.cse.imageannotatorbackend.service.AnnotatorsService;
 import dev.cse.imageannotatorbackend.service.MessagesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,21 +60,20 @@ public class AnnotatorController {
 	}
 
 	@GetMapping("/get-messages")
-	public List<String> getMessages(Principal principal) {
+	public List<Messages> getMessages(Principal principal) {
 		try {
 			return messagesService.getMessages(principal.getName());
 		} catch (Exception e) {
 			return new ArrayList<>(){{
-				add(e.toString());
+				new Messages(-999, e.toString());
 			}};
 		}
 	}
 
 	@PostMapping("/read-message")
-	public ResponseEntity<String> readMessage(Principal principal, @RequestBody Map<String, String> message) {
+	public ResponseEntity<String> readMessage(Principal principal, @RequestBody Map<String, Long> body) {
 		try {
-			MessagesId messageId = new MessagesId(principal.getName(), message.get("message"));
-			messagesService.deleteMessage(messageId);
+			messagesService.deleteMessage(principal.getName(), body.get("id"));
 			return new ResponseEntity<>("Message Read", HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);

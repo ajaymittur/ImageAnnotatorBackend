@@ -8,7 +8,10 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface AnnotatorsRepository extends JpaRepository<Annotators, String> {
-	@Query(value = "SELECT * FROM Annotators WHERE Username = ?1", nativeQuery = true)
+public interface AnnotatorsRepository extends JpaRepository<Annotators, Long> {
+	@Query(value = "SELECT * FROM Annotators a WHERE a.Username = ?1", nativeQuery = true)
 	Optional<Annotators> findByUsername(String username);
+
+	@Query(value = "DELETE FROM Annotators a WHERE a.Username = ?1", nativeQuery = true)
+	void deleteByUsername(String username);
 }

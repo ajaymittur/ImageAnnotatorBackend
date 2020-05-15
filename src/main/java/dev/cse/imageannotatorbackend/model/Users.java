@@ -8,6 +8,10 @@ import java.util.Date;
 public class Users {
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "UserId")
+	private Long id;
+
 	@Column(name = "Username")
 	private String username;
 
@@ -19,9 +23,6 @@ public class Users {
 
 	@Column(name = "Name")
 	private String name;
-
-	@Column(name = "Organization")
-	private String organization;
 
 	@Column(name = "Created_On")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -59,19 +60,19 @@ public class Users {
 		this.name = name;
 	}
 
-	public String getOrganization() {
-		return organization;
-	}
-
-	public void setOrganization(String organization) {
-		this.organization = organization;
-	}
-
 	public Date getCreated_on() {
 		return created_on;
 	}
 
 	public void setCreated_on(Date created_on) {
 		this.created_on = created_on;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

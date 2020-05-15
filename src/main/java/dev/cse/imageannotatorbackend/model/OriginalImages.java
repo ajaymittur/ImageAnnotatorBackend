@@ -6,50 +6,43 @@ import java.util.Set;
 
 @Entity
 @Table(name = "Original_Images")
-@IdClass(OriginalImagesId.class)
 public class OriginalImages {
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "ImageId")
+	private Long id;
+
 	@Column(name = "Image_Name")
 	private String name;
 
-	@Id
 	@Column(name = "Folder_Name")
 	private String folderName;
 
 	@Column(name = "Image_URL")
 	private String url;
 
-	@ManyToOne
-	@JoinColumn(name = "Username")
-	private Users user;
+	@Column(name = "Uploaded_By")
+	private String uploaded_by;
+
+	@Column(name = "UserId")
+	private long userId;
 
 	@ElementCollection
-	@CollectionTable(name = "Image_Categories", joinColumns = {
-			@JoinColumn(name = "Image_Name", referencedColumnName = "Image_Name"),
-			@JoinColumn(name = "Folder_Name", referencedColumnName = "Folder_Name")
-	})
+	@CollectionTable(name = "Image_Categories", joinColumns = @JoinColumn(name = "ImageId", referencedColumnName = "ImageId"))
 	@Column(name = "Category")
 	private Set<String> categories = new HashSet<>();
-
-	@ElementCollection
-	@CollectionTable(name = "Image_Tags", joinColumns = {
-			@JoinColumn(name = "Image_Name", referencedColumnName = "Image_Name"),
-			@JoinColumn(name = "Folder_Name", referencedColumnName = "Folder_Name")
-	})
-	@Column(name = "Tag")
-	private Set<String> tags = new HashSet<>();
 
 	public OriginalImages() {
 	}
 
-	public OriginalImages(Users user, String name, String folderName, String url, Set<String> categories, Set<String> tags) {
-		this.user = user;
+	public OriginalImages(Users user, String name, String folderName, String url, Set<String> categories) {
 		this.name = name;
 		this.folderName = folderName;
 		this.url = url;
+		this.uploaded_by = user.getUsername();
+		this.userId = user.getId();
 		this.categories = categories;
-		this.tags = tags;
 	}
 
 	public String getName() {
@@ -76,14 +69,6 @@ public class OriginalImages {
 		this.url = url;
 	}
 
-	public Users getUser() {
-		return user;
-	}
-
-	public void setUser(Users user) {
-		this.user = user;
-	}
-
 	public Set<String> getCategories() {
 		return categories;
 	}
@@ -92,11 +77,27 @@ public class OriginalImages {
 		this.categories = categories;
 	}
 
-	public Set<String> getTags() {
-		return tags;
+	public Long getId() {
+		return id;
 	}
 
-	public void setTags(Set<String> tags) {
-		this.tags = tags;
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getUploaded_by() {
+		return uploaded_by;
+	}
+
+	public void setUploaded_by(String uploaded_by) {
+		this.uploaded_by = uploaded_by;
+	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 }

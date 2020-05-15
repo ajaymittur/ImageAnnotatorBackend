@@ -31,7 +31,7 @@ public class ImageController {
 	}
 
 	@PostMapping("/upload")
-	public Map<String, String[]> uploadImages(@RequestPart(value = "files") MultipartFile[] files, @RequestParam String[] categories, @RequestParam(required = false) String[] tags, Authentication authentication) throws IOException {
+	public Map<String, String[]> uploadImages(@RequestPart(value = "files") MultipartFile[] files, @RequestParam String[] categories, Authentication authentication) throws IOException {
 		/*
 			For USER: Categories is the possible labels of the images
 			For ANNOTATOR: Categories is the label of corresponding image in the files array
@@ -51,7 +51,7 @@ public class ImageController {
 		// Save images along with related data in database
 		String role = imageUtilsService.getRoleFromAuth(authentication);
 		if (role.equals("USER")) {
-			originalImagesService.addImages(authentication.getName(), image_urls, categories, tags);
+			originalImagesService.addImages(authentication.getName(), image_urls, categories);
 		} else if (role.equals("ANNOTATOR")) {
 			annotatedImagesService.addImages(authentication.getName(), image_urls, categories);
 		}

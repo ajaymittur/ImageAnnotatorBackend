@@ -10,7 +10,7 @@ public class AnnotatedImage extends Image {
 	public AnnotatedImage(AnnotatedImages annotImg) {
 		super(annotImg.getName(), annotImg.getFolderName(), annotImg.getUrl());
 		this.category = annotImg.getCategory();
-		this.annotatedBy = annotImg.getAnnotator().getUsername();
+		this.annotatedBy = annotImg.getAnnotated_by();
 	}
 
 	public String getCategory() {

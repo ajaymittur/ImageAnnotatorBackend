@@ -64,9 +64,11 @@ public class AdminController {
     }
 
     @PostMapping("/send-message")
-    public ResponseEntity<String> sendMessage(@RequestBody Messages message) {
+    public ResponseEntity<String> sendMessage(@RequestBody Map<String, String> body) {
         try {
-            messagesService.addMessage(message);
+            String username = body.get("username");
+            String message = body.get("message");
+            messagesService.addMessage(username, message);
             return new ResponseEntity<>("Message Sent to Annotator Successfully", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);

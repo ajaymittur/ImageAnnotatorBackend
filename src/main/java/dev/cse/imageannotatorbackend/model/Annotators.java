@@ -2,12 +2,15 @@ package dev.cse.imageannotatorbackend.model;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 public class Annotators {
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "AnnotatorId")
+	private Long id;
+
 	@Column(name = "Username")
 	private String username;
 
@@ -73,5 +76,13 @@ public class Annotators {
 
 	public void setCreated_on(Date created_on) {
 		this.created_on = created_on;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

@@ -1,12 +1,15 @@
 package dev.cse.imageannotatorbackend.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Admin {
+
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name = "AdminId")
+    private Long id;
+
     @Column(name = "Username")
     private String username;
 

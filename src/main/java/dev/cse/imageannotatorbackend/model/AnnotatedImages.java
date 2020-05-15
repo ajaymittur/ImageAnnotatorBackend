@@ -5,14 +5,15 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "Annotated_Images")
-@IdClass(AnnotatedImagesId.class)
 public class AnnotatedImages {
 
 	@Id
+	@Column(name = "ImageId")
+	private Long id;
+
 	@Column(name = "Image_Name")
 	private String name;
 
-	@Id
 	@Column(name = "Folder_Name")
 	private String folderName;
 
@@ -22,19 +23,23 @@ public class AnnotatedImages {
 	@Column(name = "Category")
 	String category;
 
-	@ManyToOne
-	@JoinColumn(name = "Annotated_By")
-	private Annotators annotator; // Enforces Username foreign key constraint
+	@Column(name = "Annotated_By")
+	private String annotated_by;
+
+	@Column(name = "AnnotatorId")
+	private long annotatorId;
 
 	public AnnotatedImages() {
 	}
 
-	public AnnotatedImages(Annotators annotator, String name, String folderName, String url, String category) {
-		this.annotator = annotator;
+	public AnnotatedImages(long imageId, Annotators annotator, String name, String folderName, String url, String category) {
+		this.id = imageId;
 		this.name = name;
 		this.folderName = folderName;
 		this.url = url;
 		this.category = category;
+		this.annotated_by = annotator.getUsername();
+		this.annotatorId = annotator.getId();
 	}
 
 	public String getName() {
@@ -69,11 +74,27 @@ public class AnnotatedImages {
 		this.category = category;
 	}
 
-	public Annotators getAnnotator() {
-		return annotator;
+	public Long getId() {
+		return id;
 	}
 
-	public void setAnnotator(Annotators annotator) {
-		this.annotator = annotator;
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getAnnotated_by() {
+		return annotated_by;
+	}
+
+	public void setAnnotated_by(String annotated_by) {
+		this.annotated_by = annotated_by;
+	}
+
+	public long getAnnotatorId() {
+		return annotatorId;
+	}
+
+	public void setAnnotatorId(long annotatorId) {
+		this.annotatorId = annotatorId;
 	}
 }
