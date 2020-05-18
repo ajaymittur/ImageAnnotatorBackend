@@ -29,6 +29,7 @@ public class AnnotatorsService {
 		return annotatorsRepository.findAll();
 	}
 
+	@Transactional
 	public void deleteAnnotatorAccount(String username) {
 		annotatorsRepository.deleteByUsername(username);
 	}
