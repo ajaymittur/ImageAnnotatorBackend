@@ -13,5 +13,5 @@ public interface AnnotatorsRepository extends JpaRepository<Annotators, Long> {
 	Optional<Annotators> findByUsername(String username);
 
 //	@Query(value = "DELETE FROM Annotators a WHERE a.Username = ?1", nativeQuery = true)
-	void deleteByUsername(String username);
+	long deleteByUsername(String username);
 }
